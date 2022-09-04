@@ -1,0 +1,72 @@
+version: "3"
+services:
+  emqx:
+    image: emqx/emqx:latest
+    container_name: emqx
+    restart: unless-stopped
+    ports:
+      # <Puerto del host>:<Puerto del contenedor>
+      - "1883:1883" # Puerto MQTT/TCP
+      - "8883:8883" # Puerto MQTT/SSL
+      - "8083:8083" # Puerto MQTT/WS
+      - "8084:8084" # Puerto MQTT/WSS
+      - "18083:18083" # Puerto de Dashboard
+    environment:
+      EMQX_NAME: "mqtt"
+      EMQX_HOST: 127.0.0.1
+      EMQX_ALLOW_ANONYMOUS: "false"
+      EMQX_NOMATCH: "deny"
+      TZ: "America/Bogota"
+      EMQX_DASHBOARD__DEFAULT_USER__LOGIN: "admin" # Usuario Dashboard
+      EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "arm100-emqx" # Contraseña Dashboard
+      EMQX_AUTH__USER__1__USERNAME: "jp" # Usuario Cliente
+      EMQX_AUTH__USER__1__PASSWORD: "mqtt" # Contraseña Cliente
+    networks:
+      - npm_proxy
+
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    user: "1001:1001"
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    volumes:
+      # Volumenes para influxdb v1.x
+      - /home/ubuntu/docker/influxdb/var/lib/influxdb:/var/lib/influxdb
+      - /home/ubuntu/docker/influxdb/etc/influxdb:/etc/influxdb
+      # Volumenes para influxdb v2.x
+      - /home/ubuntu/docker/influxdb/var/lib/influxdb2:/var/lib/influxdb2
+      - /home/ubuntu/docker/influxdb/etc/influxdb2:/etc/influxdb2
+    networks:
+      - npm_proxy
+
+  nodered:
+    image: nodered/node-red:latest
+    container_name: nodered
+    user: "1001:1001"
+    restart: unless-stopped
+    ports:
+      - "1880:1880"
+    volumes:
+      - /home/ubuntu/docker/nodered/data:/data
+    environment:
+      - TZ=America/Bogota
+    networks:
+      - npm_proxy
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    user: "1001:1001"
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - /home/ubuntu/docker/grafana/var/lib/grafana:/var/lib/grafana
+    networks:
+      - npm_proxy
+
+networks:
+  npm_proxy:
+    external: true
