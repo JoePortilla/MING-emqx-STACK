@@ -17,10 +17,10 @@ services:
       EMQX_ALLOW_ANONYMOUS: "false"
       EMQX_NOMATCH: "deny"
       TZ: "America/Bogota"
-      EMQX_DASHBOARD__DEFAULT_USER__LOGIN: "admin" # Usuario Dashboard
-      EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "arm100-emqx" # Contraseña Dashboard
-      EMQX_AUTH__USER__1__USERNAME: "jp" # Usuario Cliente
-      EMQX_AUTH__USER__1__PASSWORD: "mqtt" # Contraseña Cliente
+      EMQX_DASHBOARD__DEFAULT_USER__LOGIN: "usuario" # Usuario Dashboard
+      EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "contraseña" # Contraseña Dashboard
+      EMQX_AUTH__USER__1__USERNAME: "usuario1" # Usuario Cliente
+      EMQX_AUTH__USER__1__PASSWORD: "contraseña1" # Contraseña Cliente
     networks:
       - npm_proxy
 
